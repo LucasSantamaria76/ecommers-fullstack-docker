@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleStatus {
+  USER
+  SELLER
+  ADMIN
+}
+
+model Users {
+  id       String     @id @default(cuid()) @db.VarChar(30)
+  email    String     @unique @db.VarChar(50)
+  password String     @db.VarChar
+  role     RoleStatus @default(USER)
+  profile  Profiles?
+}
+
+model Profiles {
+  id        String   @id @default(cuid()) @db.VarChar(30)
+  avatar    String   @default("https://png.pngtree.com/png-clipart/20210915/ourmid/pngtree-user-avatar-login-interface-abstract-blue-icon-png-image_3917504.jpg") @db.VarChar()
+  firstName String   @db.VarChar(25)
+  lastName  String   @db.VarChar(20)
+  city      String   @db.VarChar(20)
+  province  String   @db.VarChar(20)
+  adress    String   @db.VarChar(50)
+  dni       String   @db.VarChar(8)
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+  userId    String   @unique
+  user      Users    @relation(fields: [userId], references: [id])
+}
+
+// model Favorite {
+//   id        String   @id @default(cuid()) @db.VarChar(30)
+// fav String[] @db.
+// }
+
+model Products {
+  id          String            @id @default(cuid()) @db.VarChar(30)
+  title       String            @db.VarChar()
+  description String            @db.VarChar(2000)
+  price       Decimal           @db.Decimal(15, 2)
+  stock       Int               @default(0) @db.Integer
+  discount    Int               @default(0) @db.Integer
+  photos      ImagesProduct[]
+  category    CategoryProduct   @relation(fields: [categoryId], references: [id])
+  categoryId  String            @db.VarChar(30)
+  purchase    PurchaseProduct[]
+  feature     ProductFeature[]
+}
+
+model ImagesProduct {
+  id        String   @id @default(cuid()) @db.VarChar(30)
+  photo     String   @db.VarChar()
+  product   Products @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String   @db.VarChar(30)
+}
+
+model ProductFeature {
+  id        String   @id @default(cuid()) @db.VarChar(30)
+  feature   String   @db.VarChar()
+  product   Products @relation(fields: [productId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  productId String   @db.VarChar(30)
+}
+
+model CategoryProduct {
+  id       String     @id @default(cuid()) @db.VarChar(30)
+  name     String     @db.VarChar(25)
+  products Products[]
+}
+
+model Purchase {
+  id            String            @id @default(cuid()) @db.VarChar(30)
+  status        String            @db.VarChar(15)
+  paymentMethod String            @db.VarChar(15)
+  createdAt     DateTime          @default(now()) @db.Timestamptz()
+  updatedAt     DateTime          @updatedAt @db.Timestamptz()
+  products      PurchaseProduct[]
+}
+
+model PurchaseProduct {
+  id              String   @id @default(cuid()) @db.VarChar(30)
+  quantityProduct Int      @default(1) @db.Integer
+  purchase        Purchase @relation(fields: [purchaseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  purchaseId      String   @db.VarChar(30)
+  product         Products @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId       String   @db.VarChar(30)
+}

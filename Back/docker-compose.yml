@@ -1,0 +1,11 @@
+
+version: "3.1"
+
+services:
+  app_db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: passdb
+    ports:
+      - "3312:3306"
+   

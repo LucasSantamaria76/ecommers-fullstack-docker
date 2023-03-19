@@ -1,0 +1,3 @@
+export { default as ErrorPage } from './Error/ErrorPage';
+export { default as Home } from './Home/Home';
+export { default as Details } from './Details/Details';
