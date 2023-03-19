@@ -30,7 +30,7 @@ import {
 } from '@tabler/icons-react';
 import { shallow } from 'zustand/shallow';
 import { useModalStore } from '../../store';
-import { useUserStore } from '../../store/userStore';
+import { useUserStore } from '../../store';
 import UserMenu from '../UserMenu/UserMenu';
 import { useStyles } from './styles';
 import logo from '/assets/logo.png';

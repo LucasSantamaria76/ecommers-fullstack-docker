@@ -16,4 +16,5 @@ export interface IProfile {
   dni?: string;
   createdAt?: string;
   updatedAt?: string;
+  favorites?: string[];
 }

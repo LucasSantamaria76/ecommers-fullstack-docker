@@ -28,6 +28,7 @@ export const UsersService = {
     const hashedPassword = await bcrypt.hash(password, 10);
     try {
       await prisma.users.create({
+        //@ts-ignore
         data: {
           email,
           password: hashedPassword,
@@ -80,6 +81,22 @@ export const UsersService = {
       return { ok: true, token: jwt.sign({ userId, email }, SECRET) };
     } catch (error) {
       return { ok: false, error: 'Error al generar el token' };
+    }
+  },
+  updateFavorite: async ({ id, favorites }: { id: string; favorites: string[] }) => {
+    try {
+      const update = await prisma.profiles.update({
+        where: {
+          id,
+        },
+        data: {
+          //@ts-ignore
+          favorites,
+        },
+      });
+      if (update) return { ok: true };
+    } catch (error) {
+      return { ok: false, error: 'Error al actulizar' };
     }
   },
 };

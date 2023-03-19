@@ -9,7 +9,7 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
-import { useUserStore } from '../../store/userStore';
+import { useUserStore } from '../../store';
 import { useStyles } from './styles';
 
 const UserMenu = () => {

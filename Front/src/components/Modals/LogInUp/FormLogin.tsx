@@ -3,7 +3,7 @@ import { useForm, yupResolver } from '@mantine/form';
 import { useFocusTrap } from '@mantine/hooks';
 import { IUser } from '../../../types/user';
 import { schemaLogin } from './schemas';
-import { useUserStore } from './../../../store/userStore';
+import { useUserStore } from './../../../store';
 import { shallow } from 'zustand/shallow';
 import { useModalStore } from './../../../store/modalStore';
 import { toast } from 'react-hot-toast';

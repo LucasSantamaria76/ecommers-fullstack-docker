@@ -23,4 +23,9 @@ export const UsersController = {
     const { ok, token } = await UsersService.login(req.user);
     res.status(ok ? 200 : 401).json({ ok, token, id: req.user.userId });
   },
+  updateFavorite: async (req: Request, res: Response) => {
+    const response = await UsersService.updateFavorite(req.body);
+
+    res.status(response?.ok ? 200 : 400).send(response);
+  },
 };

@@ -6,6 +6,7 @@ const router = Router();
 
 router.get('/', UsersController.getAll);
 router.get('/:id', UsersController.getById);
+router.patch('/', UsersController.updateFavorite);
 router.post('/register', UsersController.create);
 router.post('/login', verifyPassword, UsersController.login);
 

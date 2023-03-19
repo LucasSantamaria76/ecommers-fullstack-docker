@@ -3,7 +3,7 @@ import { IconHeart, IconShoppingCartPlus } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { shallow } from 'zustand/shallow';
-import { useUserStore } from '../../store/userStore';
+import { useUserStore } from '../../store';
 import { formatPrice } from '../../Utils/formatPrice';
 import { limitString } from '../../Utils/limitString';
 import { Product } from './../../types/products.d';
@@ -17,7 +17,7 @@ const CardTemplate = (props: Props) => {
   const navigate = useNavigate();
   const { favorites, toggleFavorite } = useUserStore(
     (state) => ({
-      favorites: state.favorites,
+      favorites: state.profile.favorites,
       toggleFavorite: state.toggleFavorite,
     }),
     shallow
@@ -63,7 +63,7 @@ const CardTemplate = (props: Props) => {
             stroke={1}
             onClick={() => toggleFavorite(id)}
             className={classes.fav}
-            fill={favorites.includes(id) ? theme.colors.red[6] : 'none'}
+            fill={favorites?.includes(id) ? theme.colors.red[6] : 'none'}
           />
         </Flex>
       </Card.Section>
