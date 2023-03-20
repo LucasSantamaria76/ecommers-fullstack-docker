@@ -1,6 +1,5 @@
 import { Card, Image, Text, Badge, Button, Group, createStyles, Avatar, Flex } from '@mantine/core';
-import { IconHeart, IconShoppingCartPlus } from '@tabler/icons-react';
-import { useState } from 'react';
+import { IconHeart, IconShoppingCartPlus, IconShoppingCartX } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { shallow } from 'zustand/shallow';
 import { useUserStore } from '../../store';
@@ -15,13 +14,20 @@ const CardTemplate = (props: Props) => {
   const { id, discount, price, photos, title } = props;
   const { classes, theme } = useStyles();
   const navigate = useNavigate();
-  const { favorites, toggleFavorite } = useUserStore(
-    (state) => ({
-      favorites: state.profile.favorites,
-      toggleFavorite: state.toggleFavorite,
+  const { addProductToCart, removeToCart, favorites, products, toggleFavorite } = useUserStore(
+    ({ addProductToCart, cart: { products }, removeToCart, profile: { favorites }, toggleFavorite }) => ({
+      addProductToCart,
+      favorites,
+      products,
+      removeToCart,
+      toggleFavorite,
     }),
     shallow
   );
+
+  const isProductInTheCart = products?.findIndex((el) => el.id === id) >= 0;
+
+  const IconCart = isProductInTheCart ? IconShoppingCartX : IconShoppingCartPlus;
 
   return (
     <Card shadow='sm' padding='lg' radius='sm' withBorder className={classes.card}>
@@ -50,15 +56,15 @@ const CardTemplate = (props: Props) => {
       </Card.Section>
       <Card.Section>
         <Flex justify='space-between' align='center' direction='row' wrap='nowrap' mb={5} mx={15}>
-          <IconShoppingCartPlus
-            size='1.2rem'
-            color={theme.colors.cyan[7]}
+          <IconCart
+            size='1.6rem'
+            color={isProductInTheCart ? theme.colors.red[7] : theme.colors.cyan[7]}
             stroke={1}
-            onClick={() => {}}
+            onClick={() => (isProductInTheCart ? removeToCart(id) : addProductToCart({ id, quantity: 1 }))}
             className={classes.fav}
           />
           <IconHeart
-            size='1.2rem'
+            size='1.6rem'
             color={theme.colors.red[6]}
             stroke={1}
             onClick={() => toggleFavorite(id)}

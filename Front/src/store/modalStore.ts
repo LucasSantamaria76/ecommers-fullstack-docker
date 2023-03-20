@@ -10,10 +10,10 @@ type Actions = {
   onShow: (modal: string) => void;
 };
 
-export const useModalStore = create(
-  devtools<State & Actions>((set) => ({
+export const useModalStore = create<State & Actions>()(
+  devtools((set) => ({
     logInUp: false,
-    onClose: (modal: string) => set((state) => ({ [modal]: false })),
-    onShow: (modal: string) => set((state) => ({ [modal]: true })),
+    onClose: (modal: string) => set(() => ({ [modal]: false })),
+    onShow: (modal: string) => set(() => ({ [modal]: true })),
   }))
 );
