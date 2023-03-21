@@ -6,7 +6,7 @@ import 'dayjs/locale/es'; //
 import dayjs from 'dayjs';
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
-import { Footer, Header } from './components';
+import { CartDrawer, Footer, Header } from './components';
 import { LogInUp } from './components/Modals';
 
 dayjs.extend(isLeapYear); // use plugin
@@ -45,6 +45,7 @@ const App = () => {
         <Outlet />
       </AppShell>
       <LogInUp />
+      <CartDrawer />
       <Toaster />
     </>
   );

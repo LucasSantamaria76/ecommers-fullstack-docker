@@ -1,4 +1,4 @@
-import { Avatar, Group, Menu, rem, Text, UnstyledButton } from '@mantine/core';
+import { Avatar, Divider, Group, Menu, rem, Text, UnstyledButton } from '@mantine/core';
 import {
   IconChevronsDown,
   IconHeart,
@@ -36,7 +36,7 @@ const UserMenu = () => {
         <UnstyledButton className={cx(classes.user, { [classes.userActive]: userMenuOpened })}>
           <Group spacing={7}>
             <Avatar src={profile.avatar} alt={profile.firstName} radius='xl' size={40} />
-            <Text weight={500} size='sm' sx={{ lineHeight: 1 }} mr={3}>
+            <Text weight={500} size='sm' sx={{ lineHeight: 1 }} mr={3} className={classes.hiddenMobile}>
               {`${profile.firstName} ${profile.lastName}`}
             </Text>
             <IconChevronsDown size={rem(12)} stroke={1.5} />
@@ -44,6 +44,18 @@ const UserMenu = () => {
         </UnstyledButton>
       </Menu.Target>
       <Menu.Dropdown>
+        <Menu.Item>
+          <Text
+            weight={500}
+            size='sm'
+            sx={{ lineHeight: 1, textAlign: 'center' }}
+            mr={3}
+            className={classes.hiddenDesktop}
+          >
+            {`${profile.firstName} ${profile.lastName}`}
+          </Text>
+        </Menu.Item>
+        <Divider className={classes.hiddenDesktop} />
         <Menu.Item icon={<IconHeart size='1.2rem' color={theme.colors.red[6]} stroke={1.5} />}>Favoritos</Menu.Item>
         <Menu.Item icon={<IconBasket size='1.2rem' color={theme.colors.yellow[6]} stroke={1.5} />}>Compras</Menu.Item>
 

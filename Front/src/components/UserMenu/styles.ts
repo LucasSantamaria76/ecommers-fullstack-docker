@@ -10,12 +10,18 @@ export const useStyles = createStyles((theme) => ({
     '&:hover': {
       backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
     },
-
-    [theme.fn.smallerThan('xs')]: {
-      display: 'none',
-    },
   },
   userActive: {
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
+  },
+  hiddenMobile: {
+    [theme.fn.smallerThan('sm')]: {
+      display: 'none',
+    },
+  },
+  hiddenDesktop: {
+    [theme.fn.largerThan('sm')]: {
+      display: 'none',
+    },
   },
 }));

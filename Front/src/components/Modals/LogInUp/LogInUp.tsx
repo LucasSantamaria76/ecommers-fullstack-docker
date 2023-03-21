@@ -9,7 +9,7 @@ interface Props {}
 
 const LogInUp = (props: Props) => {
   const [isRegister, setIsRegister] = useState(false);
-  const { logInUp, onClose } = useModalStore();
+  const { logInUp, onClose } = useModalStore(({ logInUp, onClose }) => ({ logInUp, onClose }));
   const { classes } = useStyles();
 
   return (

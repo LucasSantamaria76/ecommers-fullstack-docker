@@ -30,6 +30,7 @@ type Actions = {
   logout: () => void;
   toggleFavorite: (id: string) => void;
   addProductToCart: ({ id, quantity }: ProductCart) => void;
+  subtractProductToCart: ({ id, quantity }: ProductCart) => void;
   emptyCart: () => void;
   removeToCart: (id: string) => void;
 };
@@ -84,28 +85,45 @@ export const useUserStore = create<State & Actions>()(
           },
           addProductToCart: ({ id, quantity }: ProductCart) => {
             const product = useProductsStore.getState().products.find((el) => el.id === id);
-
+            const price = product!.discount
+              ? product!.price - product!.price * (product!.discount / 100)
+              : product!.price;
             if (get().logged) {
               const indexProductInCart = get().cart?.products?.findIndex((el) => el.id === id);
               indexProductInCart >= 0
                 ? set(({ cart }) => {
                     cart.products[indexProductInCart].quantity += quantity;
-                    cart.total += (product!.price - product!.price * (product!.discount / 100)) * quantity;
+                    cart.total += +price * +quantity;
                   })
                 : set(({ cart }) => {
                     cart.products.push({ id, quantity: 1 });
-                    cart.total += (product!.price - product!.price * (product!.discount / 100)) * quantity;
+                    cart.total += +price;
                   });
             } else toast.error('Debes inicir sesión para agregar al carrito');
           },
+          subtractProductToCart: ({ id, quantity }: ProductCart) => {
+            const product = useProductsStore.getState().products.find((el) => el.id === id);
+            const price = product!.discount
+              ? product!.price - product!.price * (product!.discount / 100)
+              : product!.price;
+            const indexProductInCart = get().cart?.products?.findIndex((el) => el.id === id);
+            get().cart?.products[indexProductInCart].quantity > 1
+              ? set(({ cart }) => {
+                  cart.products[indexProductInCart].quantity -= quantity;
+                  cart.total -= +price * +quantity;
+                })
+              : get().removeToCart(id);
+          },
           removeToCart: (id: string) => {
             const product = useProductsStore.getState().products.find((el) => el.id === id);
-            const indexProductInCart = get().cart?.products?.findIndex((el) => el.id === id);
+            const price = product!.discount
+              ? product!.price - product!.price * (product!.discount / 100)
+              : product!.price;
+            const productInCart = get().cart?.products?.find((el) => el.id === id);
             set(({ cart }) => {
-              cart.total -=
-                (product!.price - product!.price * (product!.discount / 100)) *
-                cart.products[indexProductInCart].quantity;
+              cart.total -= +price * +productInCart!.quantity;
               cart.products = cart.products.filter((el) => el.id !== id);
+              !cart.products.length && (cart.total = 0);
             });
           },
           emptyCart: () =>

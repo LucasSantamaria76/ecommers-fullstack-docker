@@ -17,71 +17,33 @@ import {
   ScrollArea,
   rem,
   Image,
+  Flex,
+  Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import {
-  IconMicrowave,
-  IconDeviceTv,
-  IconDeviceCctv,
-  IconDeviceMobile,
-  IconBrandDiscord,
-  IconDeviceLaptop,
-  IconChevronDown,
-} from '@tabler/icons-react';
+import { IconChevronDown } from '@tabler/icons-react';
 import { shallow } from 'zustand/shallow';
 import { useModalStore } from '../../store';
 import { useUserStore } from '../../store';
-import UserMenu from '../UserMenu/UserMenu';
+import { IconCart, UserMenu } from '..';
 import { useStyles } from './styles';
 import logo from '/assets/logo.png';
-
-const mockdata = [
-  {
-    icon: IconDeviceLaptop,
-    title: 'Computación',
-    description: 'Notebook, tablet, monitores y más...',
-  },
-  {
-    icon: IconDeviceTv,
-    title: 'Tv, audio y video',
-    description: 'SmartTv,equipos de audio, parlantes y más...',
-  },
-  {
-    icon: IconDeviceCctv,
-    title: 'Cámaras y Accesorios',
-    description: 'Cámaras de fotos, de vigilancia y todos los accesorios',
-  },
-  {
-    icon: IconBrandDiscord,
-    title: 'Consolas y Videojuegos',
-    description: 'Consolas, juegos, accesorios y más...',
-  },
-  {
-    icon: IconDeviceMobile,
-    title: 'Celulares y Teléfonos',
-    description: 'Todos los teléfonos y accesorios',
-  },
-  {
-    icon: IconMicrowave,
-    title: 'Electrodomésticos',
-    description: 'Todo los electrodomésticos y repuestos',
-  },
-];
+import { categoryMenu } from './listCategoryMenu';
 
 export default function HeaderMenu() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const { classes, theme } = useStyles();
-  const onShow = useModalStore((state) => state.onShow, shallow);
+  const onShow = useModalStore(({ onShow }) => onShow, shallow);
   const { logout, logged } = useUserStore(
-    (state) => ({
-      logout: state.logout,
-      logged: state.logged,
+    ({ logout, logged }) => ({
+      logout,
+      logged,
     }),
     shallow
   );
 
-  const links = mockdata.map((item) => (
+  const links = categoryMenu.map((item) => (
     <UnstyledButton className={classes.subLink} key={item.title}>
       <Group noWrap align='flex-start'>
         <ThemeIcon size={34} variant='default' radius='md'>
@@ -102,7 +64,7 @@ export default function HeaderMenu() {
   return (
     <Box mb={10}>
       <Header height={60} px='md'>
-        <Group position='apart' sx={{ height: '100%' }}>
+        <Flex justify='space-between' align='center'>
           <Image maw={50} radius='md' src={logo} alt='logo' />
           <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
             <HoverCard width={600} position='bottom' radius='md' shadow='md' withinPortal>
@@ -139,27 +101,36 @@ export default function HeaderMenu() {
               Contacto
             </a>
           </Group>
-
-          <Group className={classes.hiddenMobile}>
+          <Group>
             {logged ? (
-              <UserMenu />
+              <>
+                {<IconCart />}
+                <UserMenu />
+              </>
             ) : (
               <Button variant='outline' onClick={() => onShow('logInUp')}>
                 Iniciar Sesión
               </Button>
             )}
+            <Burger opened={drawerOpened} onClick={toggleDrawer} className={classes.hiddenDesktop} />
           </Group>
-
-          <Burger opened={drawerOpened} onClick={toggleDrawer} className={classes.hiddenDesktop} />
-        </Group>
+        </Flex>
       </Header>
 
       <Drawer
         opened={drawerOpened}
         onClose={closeDrawer}
-        size='100%'
-        padding='md'
-        title='Navigation'
+        size='xs'
+        position='right'
+        /* padding='md' */
+        title={
+          <Group>
+            <Image maw={30} radius='md' src={logo} alt='logo' />
+            <Title order={4} color={theme.colors.cyan[4]}>
+              My Market
+            </Title>
+          </Group>
+        }
         className={classes.hiddenDesktop}
         zIndex={1000000}
       >
@@ -182,12 +153,6 @@ export default function HeaderMenu() {
           </a>
 
           <Divider my='sm' color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
-
-          <Group position='center' grow pb='xl' px='md'>
-            <Button variant='outline' onClick={() => (logged ? logout() : onShow('logInUp'))}>
-              {logged ? 'Cerrar Sesión' : 'Iniciar Sesión'}
-            </Button>
-          </Group>
         </ScrollArea>
       </Drawer>
     </Box>

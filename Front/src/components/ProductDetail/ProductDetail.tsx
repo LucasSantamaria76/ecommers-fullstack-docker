@@ -31,7 +31,7 @@ const ProductDetail = () => {
   return (
     <>
       <Container size={matches ? '100%' : '90%'} px={0}>
-        <Link to={-1 as any} className={classes.link}>
+        <Link to='/home' className={classes.link}>
           Volver al listado
         </Link>
         <Card shadow='sm' radius='md' withBorder mt={5}>
